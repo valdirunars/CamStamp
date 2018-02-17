@@ -6,7 +6,8 @@ target 'CamStamp' do
   use_frameworks!
 
   # Pods for CamStamp
-
+pod 'RxSwift'
+pod 'RxCocoa'
   target 'CamStampTests' do
     inherit! :search_paths
     # Pods for testing

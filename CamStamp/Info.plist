@@ -41,5 +41,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSCameraUsageDescription</key>
+    <string>Used to take the pictures to watermark</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>To be able to save watermarked images to photos</string>
 </dict>
 </plist>
