@@ -13,95 +13,70 @@ import Photos
 final class ViewModel: NSObject, UINavigationControllerDelegate {
     let imageSubject = BehaviorSubject<UIImage?>(value: nil)
     let watermarkScale = BehaviorSubject<Float>(value: 0.2)
+    
     let savePressed = PublishSubject<Void>()
     
+    let assets = BehaviorSubject<[PHAsset]>(value: [])
+    
     let presentAlert = PublishSubject<String>()
-
+    
     let disposeBag = DisposeBag()
     
-    lazy var filterManager = FilterManager(inputImage: self.imageSubject,
-                                           watermarkScale: watermarkScale)
-    
+    let filterManager = FilterManager()
+    let taskManager = TaskManager()
+
     override init() {
         super.init()
-
-        savePressed.withLatestFrom(filterManager.output.filter { $0 != nil }.map { $0! })
+            
+        assets
+            .filter { $0.isEmpty == false }
+            .throttle(0.1, scheduler: MainScheduler.instance)
+            .map {
+                let asset = $0.first!
+                return InputTask.fetchImage(asset)
+            }
+            .subscribe(taskManager.input)
+            .disposed(by: disposeBag)
+        
+        let image = imageSubject
+            .filter { i in i != nil }
+            .map { i in i! }
+        
+        savePressed
+            .map { _ in true }
+            .withLatestFrom(image)
+            .withLatestFrom(watermarkScale.map(CGFloat.init)) { i, s in (i, s) }
+            .map(filterManager.output)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .subscribeOn(MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] _ in
-                if PHPhotoLibrary.authorizationStatus() != .authorized {
-                    PHPhotoLibrary.requestAuthorization({ status in
-                        if status == .authorized {
-                            self.savePhoto()
-                        } else {
-                            self.presentAlert.onNext("Failed to save photo")
-                        }
-                    })
-                } else {
-                    self.savePhoto()
+            .map { image -> InputTask in
+                PHPhotoLibrary.authorizationStatus() != .authorized ? .requestAuthorization(image)
+                    : .saveImage(image)
+            }
+            .subscribe(taskManager.input)
+            .disposed(by: disposeBag)
+        
+        taskManager.output
+            .subscribe(onNext: { [unowned self] output in
+                switch output {
+                case .fetchImage(let img):
+                    self.imageSubject.onNext(img)
+                case .saveImage(let success):
+                    self.presentAlert.onNext(success ? "Successfully saved image"
+                        : "Failed to save image")
+                    var assets = try! self.assets.value()
+                    if assets.count >= 2 {
+                        assets.remove(at: 0)
+                        self.assets.onNext(assets)
+                    }
+                case .requestAuthorization(let success, let img):
+                    if success {
+                        self.taskManager.input.onNext(.saveImage(img))
+                    } else {
+                        self.presentAlert.onNext("Could not save image")
+                    }
                 }
             })
             .disposed(by: disposeBag)
-    }
-    
-    func savePhoto() {
-        DispatchQueue.global(qos: .background).async {
-
-            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-            let url = URL(fileURLWithPath: "\(documentsPath)/tempFile.jpg")
-
-            DispatchQueue.main.async {
-                let image = (try! self.filterManager.output.value())!
-
-                UIGraphicsBeginImageContext(image.size)
-                
-                image.draw(in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
-                
-                let convertibleImage = UIGraphicsGetImageFromCurrentImageContext()!
-                
-                UIGraphicsEndImageContext()
-                
-                let data = UIImagePNGRepresentation(convertibleImage)!
-                try! data.write(to: url, options: .atomic)
-
-                PHPhotoLibrary.shared().performChanges({
-                    PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
-                }) { success, error in
-                    self.presentAlert.onNext(success ? "SUCCESS"
-                                                     : "FAILED: \(error?.localizedDescription ?? "")")
-                }
-            }
-        }
-    }
-}
-
-extension ViewModel {
-    var saveHidden: Observable<Bool> {
-        return imageSubject.map { $0 == nil }
-    }
-}
-
-extension ViewModel: UIImagePickerControllerDelegate  {
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        var pickedImage: UIImage?
-        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            pickedImage = editedImage
-        } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            pickedImage = image
-        }
-        
-        guard let image = pickedImage else { return }
-
-        print(image.imageOrientation.rawValue)
-        
-        imageSubject.onNext(image)
-        
-        picker.dismiss(animated: true, completion: nil)
-        
-    }
-    
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
     }
 }

@@ -1,6 +1,0 @@
-framework module Pods_CamStampTests {
-  umbrella header "Pods-CamStampTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

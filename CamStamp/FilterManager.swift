@@ -11,52 +11,23 @@ import CoreImage
 import RxSwift
 
 final class FilterManager {
-    static let watermark = CIImage(image: #imageLiteral(resourceName: "watermark"))!
+    static let watermark = CIImage(image: #imageLiteral(resourceName: "watermark"))!    
+    
+    init() { }
 
-    let input: Observable<UIImage>
-    
-    let watermarkScale: Observable<Float>
-    
-    let output = BehaviorSubject<UIImage?>(value: nil)
-    
-    let disposeBag = DisposeBag()
-
-    init(inputImage: Observable<UIImage?>,
-         watermarkScale: Observable<Float>) {
-
-        self.input = inputImage
-            .filter { $0 != nil }
-            .map { $0! }
-        
-        self.watermarkScale = watermarkScale
-        
-        input.map { $0.normalized() }
-            .flatMap { [weak self] image -> Observable<(UIImage, Float)> in
-                let scale = self?.watermarkScale ?? .just(0.2)
-                return Observable.combineLatest(Observable.just(image), scale)
-            }
-            .throttle(0.2, scheduler: MainScheduler.instance)
-            .map { args in
-                let (image, wScale) = args
-                
-                let watermarkScale = CGFloat(wScale)
-                
-                let ciImage = CIImage(image: image)
-                
-                let filter = CIFilter(name: "CISourceOverCompositing")!
-                filter.setValue(self.watermark(for: image, watermarkScale: watermarkScale),
-                                forKey: kCIInputImageKey)
-                filter.setValue(ciImage,
-                                forKey: kCIInputBackgroundImageKey)
-                return filter.outputImage!
-            }
-            .map { UIImage(ciImage: $0) }
-            .subscribe(output)
-            .disposed(by: disposeBag)
-    }
-    
     static func margin(for size: CGSize) -> CGFloat {
         return size.width * 0.015
+    }
+
+    func output(for image: UIImage, watermarkScale: CGFloat) -> UIImage {
+        let ciImage = CIImage(image: image.normalized())
+        
+        let filter = CIFilter(name: "CISourceOverCompositing")!
+        filter.setValue(self.watermark(for: image, watermarkScale: watermarkScale),
+                        forKey: kCIInputImageKey)
+        filter.setValue(ciImage,
+                        forKey: kCIInputBackgroundImageKey)
+        return UIImage(ciImage: filter.outputImage!)
     }
     
     func watermark(for image: UIImage, watermarkScale: CGFloat) -> CIImage {

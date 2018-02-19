@@ -9,35 +9,32 @@
 import UIKit
 import RxSwift
 import RxCocoa
-
-extension Comparable {
-    func withMinimum(_ min: Self) -> Self {
-        return max(min, self)
-    }
-    
-    func withMaximum(_ max: Self) -> Self {
-        return min(max, self)
-    }
-}
+import NVActivityIndicatorView
+import Lorikeet
 
 class ViewController: UIViewController, UINavigationControllerDelegate {
 
+    @IBOutlet weak var galleryButton: UIButton!
     @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
     let previewView = UIImageView(image: #imageLiteral(resourceName: "watermark"))
     
+    var indicator: NVActivityIndicatorView!
+    
     let viewModel = ViewModel()
     
-    let disposeBag = DisposeBag()
+    let presentMediaTypePicker = PublishSubject<UIImagePickerControllerSourceType>()
+    
+    var disposeBag = DisposeBag()
 
     let scaleValueKey = "scaleValueKey"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        previewView.contentMode = .scaleAspectFit
         imageView.addSubview(previewView)
         
         let lastValue = UserDefaults.standard.float(forKey: scaleValueKey)
@@ -47,42 +44,18 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             self?.updatePreview(with: initialSliderValue)
         }
         
-        viewModel.presentAlert
-            .map { title in
-                let alert = UIAlertController.init(title: title, message: nil, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                return alert
-            }
-            .subscribe(onNext: { [unowned self] in self.present($0, animated: true, completion: nil) })
-            .disposed(by: disposeBag)
+        setupRx()
+    }
+    
+    func resetupRx() {
+        disposeBag = DisposeBag()
+        setupRx()
+    }
+    
+    func setupRx() {
+        setupRxForImagePicking()
+        setupRxForViewModel()
 
-        viewModel.imageSubject
-            .bind(to: imageView.rx.image)
-            .disposed(by: disposeBag)
-        
-        viewModel.saveHidden
-            .bind(to: saveButton.rx.isHidden)
-            .disposed(by: disposeBag)
-        
-        cameraButton.rx.tap
-            .subscribe(onNext:  { [unowned self] in
-                guard let mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera),
-                    UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                        self.showAlert()
-                        return
-                }
-                
-                let controller = UIImagePickerController()
-                controller.sourceType = .camera
-                controller.allowsEditing = false
-                
-                controller.mediaTypes = mediaTypes
-                
-                controller.delegate = self.viewModel
-                self.present(controller, animated: true)
-            })
-            .disposed(by: disposeBag)
-        
         slider.rx.value
             .do(onNext: { [unowned self] in
                 self.updatePreview(with: $0)
@@ -98,31 +71,65 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
+        let image = imageView.image
+        resetupRx()
+        viewModel.imageSubject.onNext(image)
     }
     
-    func showAlert() {
-        let alert = UIAlertController(title: "Cannot Get Camera", message: "Media type \"Camera\" not available", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+    func setupRxForViewModel() {
+        viewModel.presentAlert
+            .subscribe(onNext: showAlert)
+            .disposed(by: disposeBag)
+        
+        viewModel.imageSubject
+            .filter { $0 != nil }
+            .subscribeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] image in
+                UIView.transition(with: self.imageView,
+                                  duration: 0.3,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                                    self.imageView.image = image
+                                    let newScale = (try? self.viewModel.watermarkScale.value()) ?? 0.2
+                                    self.updatePreview(with: newScale)
+                                  }, completion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.taskManager.isWorking
+            .subscribeOn(MainScheduler.instance)
+            .subscribe(onNext: setIndicatorState)
+            .disposed(by: disposeBag)
+        
+        viewModel.taskManager.isWorking.skip(1)
+            .debounce(0.2, scheduler: MainScheduler.instance)
+            .bind(to: saveButton.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        saveButton.rx.tap.map { _ in true }
+            .bind(to: saveButton.rx.isHidden)
+            .disposed(by: disposeBag)
     }
     
-    func updatePreview(with scale: Float) {
-        let newScale = CGFloat(scale)
-
-        let fullSize = imageView.frame.size
-        let margin = FilterManager.margin(for: fullSize)
+    func setupRxForImagePicking() {
+        galleryButton.rx.tap
+            .map(imagePicker)
+            .subscribe(onNext: { [unowned self] actionSheet in
+                self.present(actionSheet, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
         
-        let previewWidth = (fullSize.width - (margin * 2)) * newScale
-        let previewHeight = (fullSize.height - (margin * 2)) * newScale
-        let x = fullSize.width - previewWidth - margin
-        let y = fullSize.height - previewHeight - margin
-
-        let frame = CGRect(x: x,
-                           y: y,
-                           width: previewWidth,
-                           height: previewHeight)
         
-        self.previewView.frame = frame
+        presentMediaTypePicker
+            .map(cameraPicker)
+            .subscribe(onNext: { [unowned self] in
+                self.present($0, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func setupColors() {
+        
     }
 }

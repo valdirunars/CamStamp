@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		21355BD8D994061D3E797A80 /* Pods_CamStampTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33F776E1E10E97E68AD5A29E /* Pods_CamStampTests.framework */; };
+		38087843203A3BC0006F59B6 /* ViewModel+imagePick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38087842203A3BC0006F59B6 /* ViewModel+imagePick.swift */; };
+		38087845203A64CB006F59B6 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38087844203A64CB006F59B6 /* TaskManager.swift */; };
 		381AC22B2038664900904CA6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381AC22A2038664900904CA6 /* AppDelegate.swift */; };
 		381AC22D2038664900904CA6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381AC22C2038664900904CA6 /* ViewController.swift */; };
 		381AC2302038664900904CA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 381AC22E2038664900904CA6 /* Main.storyboard */; };
@@ -16,6 +18,8 @@
 		381AC2402038664A00904CA6 /* CamStampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381AC23F2038664A00904CA6 /* CamStampTests.swift */; };
 		384661D62038AD0B00FD0D8B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384661D52038AD0B00FD0D8B /* ViewModel.swift */; };
 		384661D82038B0F200FD0D8B /* FilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384661D72038B0F200FD0D8B /* FilterManager.swift */; };
+		384661DA2039AB6C00FD0D8B /* UIKit+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384661D92039AB6C00FD0D8B /* UIKit+extensions.swift */; };
+		384661DC2039AE9800FD0D8B /* ViewModel+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384661DB2039AE9800FD0D8B /* ViewModel+Save.swift */; };
 		6135B84ECCE4A70FE613938D /* Pods_CamStamp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63D25513E4786DAB450521D /* Pods_CamStamp.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +36,8 @@
 /* Begin PBXFileReference section */
 		1B3B655BC874B72993726AF9 /* Pods-CamStampTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamStampTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CamStampTests/Pods-CamStampTests.debug.xcconfig"; sourceTree = "<group>"; };
 		33F776E1E10E97E68AD5A29E /* Pods_CamStampTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CamStampTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		38087842203A3BC0006F59B6 /* ViewModel+imagePick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+imagePick.swift"; sourceTree = "<group>"; };
+		38087844203A64CB006F59B6 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		381AC2272038664900904CA6 /* CamStamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamStamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		381AC22A2038664900904CA6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		381AC22C2038664900904CA6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,6 +50,8 @@
 		381AC2412038664A00904CA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		384661D52038AD0B00FD0D8B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		384661D72038B0F200FD0D8B /* FilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterManager.swift; sourceTree = "<group>"; };
+		384661D92039AB6C00FD0D8B /* UIKit+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+extensions.swift"; sourceTree = "<group>"; };
+		384661DB2039AE9800FD0D8B /* ViewModel+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Save.swift"; sourceTree = "<group>"; };
 		9D2C099E64A3199B5120E76D /* Pods-CamStamp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamStamp.release.xcconfig"; path = "Pods/Target Support Files/Pods-CamStamp/Pods-CamStamp.release.xcconfig"; sourceTree = "<group>"; };
 		C454C4A8DB03AA38672510FC /* Pods-CamStampTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamStampTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CamStampTests/Pods-CamStampTests.release.xcconfig"; sourceTree = "<group>"; };
 		C48C81E6BCD2B0BD8F60FB5A /* Pods-CamStamp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CamStamp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CamStamp/Pods-CamStamp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -96,7 +104,11 @@
 				381AC22A2038664900904CA6 /* AppDelegate.swift */,
 				381AC22C2038664900904CA6 /* ViewController.swift */,
 				384661D52038AD0B00FD0D8B /* ViewModel.swift */,
+				384661DB2039AE9800FD0D8B /* ViewModel+Save.swift */,
+				38087842203A3BC0006F59B6 /* ViewModel+imagePick.swift */,
 				384661D72038B0F200FD0D8B /* FilterManager.swift */,
+				384661D92039AB6C00FD0D8B /* UIKit+extensions.swift */,
+				38087844203A64CB006F59B6 /* TaskManager.swift */,
 				381AC22E2038664900904CA6 /* Main.storyboard */,
 				381AC2312038664900904CA6 /* Assets.xcassets */,
 				381AC2332038664900904CA6 /* LaunchScreen.storyboard */,
@@ -336,10 +348,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				384661DA2039AB6C00FD0D8B /* UIKit+extensions.swift in Sources */,
+				384661DC2039AE9800FD0D8B /* ViewModel+Save.swift in Sources */,
+				38087845203A64CB006F59B6 /* TaskManager.swift in Sources */,
 				381AC22D2038664900904CA6 /* ViewController.swift in Sources */,
 				384661D62038AD0B00FD0D8B /* ViewModel.swift in Sources */,
 				381AC22B2038664900904CA6 /* AppDelegate.swift in Sources */,
 				384661D82038B0F200FD0D8B /* FilterManager.swift in Sources */,
+				38087843203A3BC0006F59B6 /* ViewModel+imagePick.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
