@@ -14,6 +14,7 @@ import Lorikeet
 
 class ViewController: UIViewController, UINavigationControllerDelegate {
 
+    @IBOutlet weak var container: UIView!
     @IBOutlet weak var galleryButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var saveButton: UIButton!
@@ -45,6 +46,11 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         }
         
         setupRx()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupColors()
     }
     
     func resetupRx() {
@@ -130,6 +136,19 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func setupColors() {
+        container.backgroundColor = .darkGray
+        saveButton.backgroundColor = .darkGray
+        let base = UIColor(hue: CGFloat(arc4random_uniform(360))/360.0,
+                           saturation: 0.5,
+                           brightness: 0.75,
+                           alpha: 1)
+        imageView.backgroundColor = base
+
+        let fg = base.lkt.complimentaryColor
+
+        galleryButton.tintColor = fg
+        slider.tintColor = fg
+        saveButton.setTitleColor(fg, for: .normal)
         
     }
 }

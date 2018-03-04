@@ -1,0 +1,6 @@
+framework module Lorikeet {
+  umbrella header "Lorikeet-umbrella.h"
+
+  export *
+  module * { export * }
+}
