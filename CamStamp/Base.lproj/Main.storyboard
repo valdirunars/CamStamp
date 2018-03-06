@@ -27,7 +27,7 @@
                             </imageView>
                             <button hidden="YES" opaque="NO" alpha="0.90000000000000002" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SG9-Ah-w2d">
                                 <rect key="frame" x="102" y="226" width="170" height="48"/>
-                                <color key="backgroundColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="eTZ-rJ-eB4"/>
                                     <constraint firstAttribute="width" constant="170" id="jcc-ZC-rGL"/>
@@ -60,7 +60,7 @@
                                         </state>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="6lf-tx-qBm" firstAttribute="centerY" secondItem="bHe-3T-Stz" secondAttribute="centerY" id="3F8-3f-gQt"/>
                                     <constraint firstItem="6lf-tx-qBm" firstAttribute="leading" secondItem="rMZ-Cn-dIh" secondAttribute="leading" constant="8" id="IgV-i8-T01"/>

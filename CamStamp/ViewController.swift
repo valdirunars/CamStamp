@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import NVActivityIndicatorView
-import Lorikeet
 
 class ViewController: UIViewController, UINavigationControllerDelegate {
 
@@ -21,6 +20,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var imageView: UIImageView!
     
     let previewView = UIImageView(image: #imageLiteral(resourceName: "watermark"))
+    
+    var colorScheme: UIColor!
     
     var indicator: NVActivityIndicatorView!
     
@@ -45,12 +46,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
             self?.updatePreview(with: initialSliderValue)
         }
         
+        colorScheme = imageView.backgroundColor
         setupRx()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setupColors()
     }
     
     func resetupRx() {
@@ -61,6 +58,13 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     func setupRx() {
         setupRxForImagePicking()
         setupRxForViewModel()
+        
+        viewModel.imageSubject
+            .map { $0 == nil }
+            .subscribe(onNext: { [unowned self] showColorScheme in
+                self.imageView?.backgroundColor = showColorScheme ? self.colorScheme : .darkGray
+            })
+            .disposed(by: disposeBag)
 
         slider.rx.value
             .do(onNext: { [unowned self] in
@@ -133,22 +137,5 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 self.present($0, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
-    }
-    
-    func setupColors() {
-        container.backgroundColor = .darkGray
-        saveButton.backgroundColor = .darkGray
-        let base = UIColor(hue: CGFloat(arc4random_uniform(360))/360.0,
-                           saturation: 0.5,
-                           brightness: 0.75,
-                           alpha: 1)
-        imageView.backgroundColor = base
-
-        let fg = base.lkt.complimentaryColor
-
-        galleryButton.tintColor = fg
-        slider.tintColor = fg
-        saveButton.setTitleColor(fg, for: .normal)
-        
     }
 }

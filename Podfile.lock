@@ -3,31 +3,31 @@ PODS:
   - BSImagePicker (2.7.1):
     - BSGridCollectionViewLayout (~> 1.2.0)
     - UIImageViewModeScaleAspect (= 1.5)
-  - Lorikeet (0.2.26)
   - NVActivityIndicatorView (4.1.1):
     - NVActivityIndicatorView/Presenter (= 4.1.1)
   - NVActivityIndicatorView/Presenter (4.1.1)
   - RxCocoa (4.1.2):
     - RxSwift (~> 4.0)
   - RxSwift (4.1.2)
+  - SnapKit (4.0.0)
   - UIImageViewModeScaleAspect (1.5)
 
 DEPENDENCIES:
   - BSImagePicker (~> 2.4)
-  - Lorikeet
   - NVActivityIndicatorView
   - RxCocoa
   - RxSwift
+  - SnapKit (~> 4.0.0)
 
 SPEC CHECKSUMS:
   BSGridCollectionViewLayout: 8f12c8e1e08c47057f5a39a6828f4395f043d78f
   BSImagePicker: eb12948a6e71b9855c2c37723dfd989b9b4288bd
-  Lorikeet: bf48535c1a7f12ddfe4f2ca00a3e91826b9ea806
   NVActivityIndicatorView: 60109b9bf46efc2e71ab81453196ccdfdfeea870
   RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
   RxSwift: e49536837d9901277638493ea537394d4b55f570
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   UIImageViewModeScaleAspect: 11a790a0b9d248a13dc63e3a78991f1463b6d84e
 
-PODFILE CHECKSUM: 63acb152d50e1d1ce644c3c487b1a4181eb6632b
+PODFILE CHECKSUM: bf34d1f9a08fdeda25ad76518b8be452e58a08cf
 
 COCOAPODS: 1.2.0.beta.1

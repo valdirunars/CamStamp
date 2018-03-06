@@ -10,7 +10,6 @@ pod 'RxSwift'
 pod 'RxCocoa'
 pod 'BSImagePicker', '~> 2.4'
 pod 'NVActivityIndicatorView'
-pod 'Lorikeet'
   target 'CamStampTests' do
     inherit! :search_paths
     # Pods for testing

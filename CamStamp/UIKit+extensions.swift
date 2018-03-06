@@ -79,7 +79,7 @@ extension ViewController {
                                        height: spinSize)
                 self.indicator = NVActivityIndicatorView(frame: spinFrame,
                                                          type: .squareSpin,
-                                                         color: .white)
+                                                         color: .darkGray)
                 self.imageView.addSubview(self.indicator)
                 self.indicator.startAnimating()
             } else {
