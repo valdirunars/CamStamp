@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import BSImagePicker
 import NVActivityIndicatorView
+import MobileCoreServices
 
 extension UIViewController {
     func showAlert(title: String) {
@@ -53,16 +54,16 @@ extension ViewController {
     }
     
     func cameraPicker(mediaType: UIImagePickerControllerSourceType) -> UIViewController {
-        guard let mediaTypes = UIImagePickerController.availableMediaTypes(for: mediaType),
-            UIImagePickerController.isSourceTypeAvailable(mediaType) else {
+
+        guard UIImagePickerController.isSourceTypeAvailable(mediaType) else {
                 return alert(with: "Cannot Get Camera")
         }
-        
+
         let controller = UIImagePickerController()
         controller.sourceType = mediaType
         controller.allowsEditing = false
-        
-        controller.mediaTypes = mediaTypes
+
+        controller.mediaTypes = [ String(kUTTypeImage) ]
         
         controller.delegate = self.viewModel
         return controller

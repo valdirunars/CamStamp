@@ -49,7 +49,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
         colorScheme = imageView.backgroundColor
         setupRx()
     }
-    
+
     func resetupRx() {
         disposeBag = DisposeBag()
         setupRx()
@@ -129,8 +129,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
                 self.present(actionSheet, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
-        
-        
+
         presentMediaTypePicker
             .map(cameraPicker)
             .subscribe(onNext: { [unowned self] in
